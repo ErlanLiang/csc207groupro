@@ -35,6 +35,7 @@ public class TetrisBoard implements Serializable{
     public static final int ADD_ROW_FILLED = 1;
     public static final int ADD_OUT_BOUNDS = 2;
     public static final int ADD_BAD = 3;
+    public static final int ADD_IS_BOOM = 4; //boom
 
     /**
      * Constructor for an empty board of the given width and height measured in blocks.
@@ -194,6 +195,7 @@ public class TetrisBoard implements Serializable{
     public int placePiece(TetrisPiece piece, int x, int y) {
         this.committed = false;
         this.backupGrid();
+        boolean isBoom = false;
         if (x < 0 || y <0 || piece.getWidth() + x > this.getWidth() || piece.getHeight() + y > this.getHeight()) {
             return ADD_OUT_BOUNDS;
         }
@@ -202,7 +204,11 @@ public class TetrisBoard implements Serializable{
             int y_position = point.y + y;
             if (this.tetrisGrid[x_position][y_position]) {
                 return ADD_BAD;
-            } else {
+            }
+            //else if(piece.getBody().length == 1){    //boom
+            //    return ADD_IS_BOOM;
+            //}
+            else {
                 this.tetrisGrid[x_position][y_position] = true;
             }
         }
@@ -213,6 +219,21 @@ public class TetrisBoard implements Serializable{
             }
         }
         return ADD_OK;
+    }
+
+    public int exolosion(int x, int y) {  //boom
+        int delCount = 0;
+        for (int i = y - 1; i < y + 2; i++){
+            if (i>=0&&i<getHeight()){
+                for (int p = x - 1; p < x + 2; p++){
+                    if (p>=0&&p<getWidth()){
+                        this.tetrisGrid[p][i] = false;
+                        delCount++;
+                    }
+                }
+            }
+        }
+        return delCount;
     }
 
     /**
