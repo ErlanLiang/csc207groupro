@@ -24,7 +24,7 @@ public class TetrisModel implements Serializable {
 
     private int boomcount = 0; //count piece till it is 20
 
-    private SingleObjectBoom boom = SingleObjectBoom.getInstance();
+    private SingleObjectBoom boom = SingleObjectBoom.getInstance(); //boom
 
     // State of the game
     protected boolean gameOn;	// true if we are playing
@@ -32,6 +32,8 @@ public class TetrisModel implements Serializable {
 
     private boolean autoPilotMode; //are we in autopilot mode?
     protected TetrisPilot pilot;
+
+    public boolean Isboom = false;
 
     public enum MoveType {
         ROTATE,
@@ -66,6 +68,7 @@ public class TetrisModel implements Serializable {
             currentPiece = pickNextPiece();
         }
         boomcount = 0;//boom
+        Isboom = false;
     }
 
     /**
@@ -149,6 +152,7 @@ public class TetrisModel implements Serializable {
     private TetrisPiece pickNextPiece() {
         if(boomcount == 10){    //boom
             boomcount = 0;
+            Isboom = true;
             return(boom.getPiece());
         }
         int pieceNum;
@@ -297,6 +301,8 @@ public class TetrisModel implements Serializable {
         if (failed && verb==MoveType.DOWN){	// if it's out of bounds due to falling
             if(currentPiece.getBody().length == 1){  //boom
                 int boomed = board.exolosion(currentX, currentY);
+                board.dropRows(currentY);
+                Isboom = false;
                 if (boomed > 0) {
                     // scores go up by 2, 4, 8, 16 as more piece are cleared
                     switch (boomed) {

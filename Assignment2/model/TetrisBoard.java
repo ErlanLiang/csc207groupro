@@ -222,6 +222,7 @@ public class TetrisBoard implements Serializable{
     }
 
     public int exolosion(int x, int y) {  //boom
+        this.backupGrid();
         int delCount = 0;
         for (int i = y - 1; i < y + 2; i++){
             if (i>=0&&i<getHeight()){
@@ -229,11 +230,44 @@ public class TetrisBoard implements Serializable{
                     if (p>=0&&p<getWidth()){
                         this.tetrisGrid[p][i] = false;
                         delCount++;
+                        this.makeHeightAndWidthArrays();
                     }
                 }
             }
         }
+
+        //
         return delCount;
+    }
+
+    public void dropRows(int y) { //boom
+        ArrayList<Integer> rowC = new ArrayList<>();
+        for (int i = y-1; i < y+2; i++) {
+            boolean fil = false;
+            for (int z = 0; z < getWidth(); z++) {
+                if (tetrisGrid[z][i]) {
+                    z = getWidth();
+                    fil = true;
+                }
+            }
+            if (!fil) {
+                rowC.add(i);
+            }
+        }
+        if(rowC.size()==0){
+            return;
+        }
+        int curR = -1;
+        for(int i:rowC){
+            curR++;
+            for(int a = i; a < getMaxHeight(); a++) {
+                for (int k = 0; k < getWidth(); k++) {
+                    tetrisGrid[k][a - curR] = tetrisGrid[k][a + 1 - curR];
+                    tetrisGrid[k][a + 1 - curR] = false;
+                }
+            }
+        }
+        makeHeightAndWidthArrays();
     }
 
     /**
