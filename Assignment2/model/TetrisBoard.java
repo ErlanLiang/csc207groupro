@@ -225,7 +225,7 @@ public class TetrisBoard implements Serializable{
         this.backupGrid();
         int delCount = 0;
         for (int i = y - 1; i < y + 2; i++){
-            if (i>=0&&i<getHeight()){
+            if (i>=0 && i<getHeight()){
                 for (int p = x - 1; p < x + 2; p++){
                     if (p>=0&&p<getWidth()){
                         this.tetrisGrid[p][i] = false;
@@ -243,15 +243,17 @@ public class TetrisBoard implements Serializable{
     public void dropRows(int y) { //boom
         ArrayList<Integer> rowC = new ArrayList<>();
         for (int i = y-1; i < y+2; i++) {
-            boolean fil = false;
-            for (int z = 0; z < getWidth(); z++) {
-                if (tetrisGrid[z][i]) {
-                    z = getWidth();
-                    fil = true;
+            if (i>=0 && i<getHeight()) {
+                boolean fil = false;
+                for (int z = 0; z < getWidth(); z++) {
+                    if (tetrisGrid[z][i]) {
+                        z = getWidth();
+                        fil = true;
+                    }
                 }
-            }
-            if (!fil) {
-                rowC.add(i);
+                if (!fil) {
+                    rowC.add(i);
+                }
             }
         }
         if(rowC.size()==0){
