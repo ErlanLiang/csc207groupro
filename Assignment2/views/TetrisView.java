@@ -297,7 +297,7 @@ public class TetrisView {
 
         // Draw a rectangle around the whole screen
         gc.setStroke(Color.GREEN);
-        gc.setFill(Color.WHITE);
+        gc.setFill(Color.GREEN);
         gc.fillRect(0, 0, this.width-1, this.height-1);
 
         // Draw the line separating the top area on the screen
